@@ -1,4 +1,4 @@
-import { LibStorefront } from '@grupakmk/libstorefront';
+import {LibStorefront, QueryUtils} from '@grupakmk/libstorefront';
 import { CustomerPricePlugin } from "../../src";
 
 console.warn('Test suite initialized');
@@ -12,5 +12,10 @@ const LSF = new LibStorefront({
 (async () => {
     await LSF.UserService.login('test@grupakmk.pl', 'Testowe2!');
     const prices = LSF.getState();
-    console.warn('Prices: ', prices);
+
+    setTimeout(async () => {
+        const q = QueryUtils.fromKey({ id: '611' });
+        const response = await LSF.SearchClient.searchByQuery({ query: q });
+        debugger;
+    }, 2000);
 })();

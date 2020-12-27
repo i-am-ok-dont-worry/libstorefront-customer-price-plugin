@@ -4,6 +4,7 @@ import { CustomerPriceDao } from './dao';
 import { CustomerPriceService } from './service';
 import { customerPriceReducer } from './store/customer-price.reducers';
 import { CustomerPriceDefaultState } from './store/customer-price.default';
+import { CustomerPriceSelectors } from './store/customer-price.selectors';
 
 /**
  * Plugin provides support for fetching individual customer prices and
@@ -21,7 +22,10 @@ export const CustomerPricePlugin = ((libstorefront: LibStorefront) => {
     libstorefront.listenTo(HookType.UserAuthorized, (customer: Customer) => {
         libstorefront.getIOCContainer().get(CustomerPriceService).getCustomerPrices(customer.id);
     });
-    libstorefront.listenTo(HookType.AfterProductFetched, (product: Product) => {
-        debugger;
+    libstorefront.listenTo(HookType.AfterProductFetched, async (product: Product) => {
+        const customerPrice = CustomerPriceSelectors.getCustomerPriceForProduct(product.id)(libstorefront.getState());
+        if (customerPrice) { Object.assign(product, { customerPrice }); }
+
+        return product;
     });
 }) as LibstorefrontPlugin;
