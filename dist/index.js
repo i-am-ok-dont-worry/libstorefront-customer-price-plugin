@@ -252,7 +252,7 @@ exports.CustomerPricePlugin = (function (libstorefront) {
     libstorefront.listenTo(libstorefront_1.HookType.AfterProductFetched, function (product) { return __awaiter(void 0, void 0, void 0, function () {
         var customer_price;
         return __generator(this, function (_a) {
-            customer_price = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product.id)(libstorefront.getState());
+            customer_price = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product)(libstorefront.getState());
             if (customer_price) {
                 Object.assign(product, { customer_price: customer_price });
             }
@@ -452,10 +452,11 @@ exports.CustomerPriceSelectors = void 0;
 var reselect_1 = __webpack_require__(/*! reselect */ "reselect");
 var CustomerPriceSelectors;
 (function (CustomerPriceSelectors) {
-    CustomerPriceSelectors.getCustomerPriceForProduct = function (productId) { return reselect_1.createSelector([function (state) { return state.customerPrices; }], function (cp) {
+    CustomerPriceSelectors.getCustomerPriceForProduct = function (product) { return reselect_1.createSelector([function (state) { return state.customerPrices; }], function (cp) {
         return cp.items.find(function (_a) {
             var product_id = _a.product_id;
-            return String(product_id) === String(productId);
+            var isEqual = String(product_id) === String(product.id) || String(product_id) === String(product.parentId);
+            return isEqual;
         });
     }); };
 })(CustomerPriceSelectors = exports.CustomerPriceSelectors || (exports.CustomerPriceSelectors = {}));

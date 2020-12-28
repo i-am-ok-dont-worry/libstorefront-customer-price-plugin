@@ -15,7 +15,10 @@ const LSF = new LibStorefront({
 
     setTimeout(async () => {
         const q = QueryUtils.fromKey({ id: '611' });
-        const response = await LSF.SearchClient.searchByQuery({ query: q });
+        // const response = await LSF.SearchClient.searchByQuery({ query: q });
+
+        const p = await LSF.ProductService.getProductByChildSku({ parentSku: '01.01.01', childSku: '01.01.01.01' });
         debugger;
     }, 2000);
 })();
+
