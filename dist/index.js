@@ -189,6 +189,17 @@ exports.CustomerPriceDao = CustomerPriceDao;
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -255,6 +266,9 @@ exports.CustomerPricePlugin = (function (libstorefront) {
             customer_price = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product)(libstorefront.getState());
             if (customer_price) {
                 Object.assign(product, { customer_price: customer_price });
+                if (product.configurable_children) {
+                    product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { customer_price: customer_price })); });
+                }
             }
             return [2 /*return*/, product];
         });

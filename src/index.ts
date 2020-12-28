@@ -24,7 +24,12 @@ export const CustomerPricePlugin = ((libstorefront: LibStorefront) => {
     });
     libstorefront.listenTo(HookType.AfterProductFetched, async (product: Product) => {
         const customer_price = CustomerPriceSelectors.getCustomerPriceForProduct(product)(libstorefront.getState());
-        if (customer_price) { Object.assign(product, { customer_price }); }
+        if (customer_price) {
+            Object.assign(product, { customer_price });
+            if (product.configurable_children) {
+                product.configurable_children = product.configurable_children.map(cc => ({ ...cc, customer_price }));
+            }
+        }
 
         return product;
     });
