@@ -250,11 +250,11 @@ exports.CustomerPricePlugin = (function (libstorefront) {
         libstorefront.getIOCContainer().get(service_1.CustomerPriceService).getCustomerPrices(customer.id);
     });
     libstorefront.listenTo(libstorefront_1.HookType.AfterProductFetched, function (product) { return __awaiter(void 0, void 0, void 0, function () {
-        var customerPrice;
+        var customer_price;
         return __generator(this, function (_a) {
-            customerPrice = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product.id)(libstorefront.getState());
-            if (customerPrice) {
-                Object.assign(product, { customerPrice: customerPrice });
+            customer_price = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product.id)(libstorefront.getState());
+            if (customer_price) {
+                Object.assign(product, { customer_price: customer_price });
             }
             return [2 /*return*/, product];
         });

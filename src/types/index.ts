@@ -1,3 +1,5 @@
+import { Product } from '@grupakmk/libstorefront';
+
 export interface CustomerPrice {
     customerprice_id: number,
     customer_id: number,
@@ -11,3 +13,5 @@ export interface CustomerPrice {
     qty: number,
     offer_id: number
 }
+
+export type CustomerProduct = Product & { customer_price: CustomerPrice };
