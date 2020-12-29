@@ -244,6 +244,7 @@ var service_1 = __webpack_require__(/*! ./service */ "./src/service/index.ts");
 var customer_price_reducers_1 = __webpack_require__(/*! ./store/customer-price.reducers */ "./src/store/customer-price.reducers.ts");
 var customer_price_default_1 = __webpack_require__(/*! ./store/customer-price.default */ "./src/store/customer-price.default.ts");
 var customer_price_selectors_1 = __webpack_require__(/*! ./store/customer-price.selectors */ "./src/store/customer-price.selectors.ts");
+var utils_1 = __webpack_require__(/*! ./utils */ "./src/utils/index.ts");
 /**
  * Plugin provides support for fetching individual customer prices and
  * manipulate product data to extend product with customer prices.
@@ -270,6 +271,7 @@ exports.CustomerPricePlugin = (function (libstorefront) {
                     product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { customer_price: customer_price })); });
                 }
             }
+            Object.assign(product, { priceObserver: utils_1.observeCustomerPrice });
             return [2 /*return*/, product];
         });
     }); });
@@ -535,26 +537,28 @@ var CustomerPriceThunks;
         var userToken, response, items;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
+                case 0: return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(false))];
+                case 1:
+                    _a.sent();
                     userToken = getState().user.token;
                     if (!userToken) {
                         libstorefront_1.Logger.info("Cannot fetch customer prices. User token is missing or invalid");
                         return [2 /*return*/, []];
                     }
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.CustomerPriceDao).getCustomerPrices(customerId, userToken)];
-                case 1:
+                case 2:
                     response = _a.sent();
-                    if (!response) return [3 /*break*/, 4];
+                    if (!response) return [3 /*break*/, 5];
                     items = response.result;
                     return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setCustomerPrices(items))];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
                 case 3:
                     _a.sent();
+                    return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
+                case 4:
+                    _a.sent();
                     return [2 /*return*/, items];
-                case 4: return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(false))];
-                case 5:
+                case 5: return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
+                case 6:
                     _a.sent();
                     return [2 /*return*/, []];
             }
@@ -575,6 +579,33 @@ var CustomerPriceThunks;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/***/ }),
+
+/***/ "./src/utils/index.ts":
+/*!****************************!*\
+  !*** ./src/utils/index.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.observeCustomerPrice = void 0;
+var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
+var observeCustomerPrice = function (callback) {
+    var interval = setInterval(function () {
+        var customerPrices = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().customerPrices;
+        if (customerPrices.loaded) {
+            callback(customerPrices.items);
+            clearInterval(interval);
+            return;
+        }
+    }, 100);
+};
+exports.observeCustomerPrice = observeCustomerPrice;
 
 
 /***/ }),

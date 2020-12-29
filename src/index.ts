@@ -5,6 +5,7 @@ import { CustomerPriceService } from './service';
 import { customerPriceReducer } from './store/customer-price.reducers';
 import { CustomerPriceDefaultState } from './store/customer-price.default';
 import { CustomerPriceSelectors } from './store/customer-price.selectors';
+import { observeCustomerPrice } from './utils';
 
 /**
  * Plugin provides support for fetching individual customer prices and
@@ -31,6 +32,7 @@ export const CustomerPricePlugin = ((libstorefront: LibStorefront) => {
             }
         }
 
+        Object.assign(product, { priceObserver: observeCustomerPrice });
         return product;
     });
 }) as LibstorefrontPlugin;

@@ -4,6 +4,7 @@ import { CustomerPriceActions } from './customer-price.actions';
 
 export namespace CustomerPriceThunks {
     export const loadCustomerPrices = (customerId: string) => async (dispatch, getState: () => LibstorefrontInnerState) => {
+        await dispatch(CustomerPriceActions.setLoaded(false));
         const userToken = getState().user.token;
         if (!userToken) {
             Logger.info(`Cannot fetch customer prices. User token is missing or invalid`);
@@ -18,7 +19,7 @@ export namespace CustomerPriceThunks {
 
             return items;
         } else {
-            await dispatch(CustomerPriceActions.setLoaded(false));
+            await dispatch(CustomerPriceActions.setLoaded(true));
             return [];
         }
     }

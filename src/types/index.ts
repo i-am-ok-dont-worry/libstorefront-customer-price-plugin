@@ -14,4 +14,4 @@ export interface CustomerPrice {
     offer_id: number
 }
 
-export type CustomerProduct = Product & { customer_price: CustomerPrice };
+export type CustomerProduct = Product & { customer_price: CustomerPrice, priceObserver?: (callback: (customerPrice: CustomerPrice) => void) => void };

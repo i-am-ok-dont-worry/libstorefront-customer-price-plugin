@@ -14,4 +14,5 @@ export interface CustomerPrice {
 }
 export declare type CustomerProduct = Product & {
     customer_price: CustomerPrice;
+    priceObserver?: (callback: (customerPrice: CustomerPrice) => void) => void;
 };
