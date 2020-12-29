@@ -265,6 +265,8 @@ exports.CustomerPricePlugin = (function (libstorefront) {
         var customer_price;
         return __generator(this, function (_a) {
             customer_price = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product)(libstorefront.getState());
+            console.warn('Customer price: ', customer_price);
+            console.warn('Product: ', product);
             if (customer_price) {
                 Object.assign(product, { customer_price: customer_price });
                 if (product.configurable_children) {
