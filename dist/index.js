@@ -268,7 +268,7 @@ exports.CustomerPricePlugin = (function (libstorefront) {
             if (customer_price) {
                 Object.assign(product, { customer_price: customer_price });
                 if (product.configurable_children) {
-                    product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { customer_price: customer_price })); });
+                    product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { price: customer_price.new_price })); });
                 }
             }
             Object.assign(product, { priceObserver: utils_1.observeCustomerPrice });

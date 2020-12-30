@@ -28,7 +28,10 @@ export const CustomerPricePlugin = ((libstorefront: LibStorefront) => {
         if (customer_price) {
             Object.assign(product, { customer_price });
             if (product.configurable_children) {
-                product.configurable_children = product.configurable_children.map(cc => ({ ...cc, customer_price }));
+                product.configurable_children = product.configurable_children.map(cc => ({
+                    ...cc,
+                    price: customer_price.new_price
+                }));
             }
         }
 
