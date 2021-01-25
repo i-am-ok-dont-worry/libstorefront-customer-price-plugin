@@ -1,6 +1,7 @@
 import { IOCContainer, LibstorefrontInnerState, Logger } from '@grupakmk/libstorefront';
 import { CustomerPriceDao } from '../dao';
 import { CustomerPriceActions } from './customer-price.actions';
+import { CustomerPrice } from '../types';
 
 export namespace CustomerPriceThunks {
     export const loadCustomerPrices = (customerId: string) => async (dispatch, getState: () => LibstorefrontInnerState) => {
@@ -17,10 +18,25 @@ export namespace CustomerPriceThunks {
             await dispatch(CustomerPriceActions.setCustomerPrices(items));
             await dispatch(CustomerPriceActions.setLoaded(true));
 
+            if (items && items.length) { await dispatch(updateProductProps(items)); }
+
             return items;
         } else {
             await dispatch(CustomerPriceActions.setLoaded(true));
             return [];
         }
-    }
+    };
+
+    export const updateProductProps = (items: CustomerPrice[]) => async (dispatch, getState) => {
+      try {
+          for (let item of items) {
+              const action = {
+                  type: 'product/UPDATE_PRODUCT_PROPS',
+                  payload: { product: { id: item.product_id, customer_price: item } }
+              };
+
+              await dispatch(action);
+          }
+      } catch (e) {}
+    };
 }
