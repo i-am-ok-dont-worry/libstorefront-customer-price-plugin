@@ -1,5 +1,10 @@
-import { createLibstorefrontModule, Customer, HookType, LibStorefront, Product } from '@grupakmk/libstorefront';
-import { LibstorefrontPlugin } from '@grupakmk/libstorefront/dist/config/types/libstorefront-plugin';
+import {
+    createLibstorefrontModule,
+    Customer,
+    HookType,
+    LibStorefront,
+    Product
+} from '@grupakmk/libstorefront';
 import { CustomerPriceDao } from './dao';
 import { CustomerPriceService } from './service';
 import { customerPriceReducer } from './store/customer-price.reducers';
@@ -35,7 +40,7 @@ export const CustomerPricePlugin = ((libstorefront: LibStorefront) => {
             }
         }
 
-        Object.assign(product, { priceObserver: observeCustomerPrice });
+        Object.assign(product, { priceObserver: observeCustomerPrice(product) });
         return product;
     });
-}) as LibstorefrontPlugin;
+});

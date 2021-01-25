@@ -1,2 +1,1 @@
-import { CustomerPrice } from '../types';
-export declare const observeCustomerPrice: (callback?: (customerPrice?: CustomerPrice) => void) => void;
+export declare const observeCustomerPrice: (product: any) => void;

@@ -1,4 +1,4 @@
-import { LibstorefrontPlugin } from '@grupakmk/libstorefront/dist/config/types/libstorefront-plugin';
+import { LibStorefront } from '@grupakmk/libstorefront';
 /**
  * Plugin provides support for fetching individual customer prices and
  * manipulate product data to extend product with customer prices.
@@ -6,4 +6,4 @@ import { LibstorefrontPlugin } from '@grupakmk/libstorefront/dist/config/types/l
  * Plugin uses AfterProductFetched hook to mutate product object after it
  * was fetched from ES.
  */
-export declare const CustomerPricePlugin: LibstorefrontPlugin;
+export declare const CustomerPricePlugin: (libstorefront: LibStorefront) => void;

@@ -271,7 +271,7 @@ exports.CustomerPricePlugin = (function (libstorefront) {
                     product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { price: customer_price.new_price })); });
                 }
             }
-            Object.assign(product, { priceObserver: utils_1.observeCustomerPrice });
+            Object.assign(product, { priceObserver: utils_1.observeCustomerPrice(product) });
             return [2 /*return*/, product];
         });
     }); });
@@ -548,7 +548,7 @@ var CustomerPriceThunks;
                     return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.CustomerPriceDao).getCustomerPrices(customerId, userToken)];
                 case 2:
                     response = _a.sent();
-                    if (!response) return [3 /*break*/, 7];
+                    if (!response) return [3 /*break*/, 5];
                     items = response.result;
                     return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setCustomerPrices(items))];
                 case 3:
@@ -556,46 +556,11 @@ var CustomerPriceThunks;
                     return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
                 case 4:
                     _a.sent();
-                    if (!(items && items.length)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, dispatch(CustomerPriceThunks.updateProductProps(items))];
-                case 5:
-                    _a.sent();
-                    _a.label = 6;
-                case 6: return [2 /*return*/, items];
-                case 7: return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
-                case 8:
+                    return [2 /*return*/, items];
+                case 5: return [4 /*yield*/, dispatch(customer_price_actions_1.CustomerPriceActions.setLoaded(true))];
+                case 6:
                     _a.sent();
                     return [2 /*return*/, []];
-            }
-        });
-    }); }; };
-    CustomerPriceThunks.updateProductProps = function (items) { return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
-        var _i, items_1, item, action, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    _i = 0, items_1 = items;
-                    _a.label = 1;
-                case 1:
-                    if (!(_i < items_1.length)) return [3 /*break*/, 4];
-                    item = items_1[_i];
-                    action = {
-                        type: 'product/UPDATE_PRODUCT_PROPS',
-                        payload: { product: { id: item.product_id, customer_price: item } }
-                    };
-                    return [4 /*yield*/, dispatch(action)];
-                case 2:
-                    _a.sent();
-                    _a.label = 3;
-                case 3:
-                    _i++;
-                    return [3 /*break*/, 1];
-                case 4: return [3 /*break*/, 6];
-                case 5:
-                    e_1 = _a.sent();
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
             }
         });
     }); }; };
@@ -627,16 +592,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.observeCustomerPrice = void 0;
 var libstorefront_1 = __webpack_require__(/*! @grupakmk/libstorefront */ "@grupakmk/libstorefront");
-var observeCustomerPrice = function (callback) {
+var customer_price_selectors_1 = __webpack_require__(/*! ../store/customer-price.selectors */ "./src/store/customer-price.selectors.ts");
+var observeCustomerPrice = function (product) {
     var interval = setInterval(function () {
-        var customerPrices = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState().customerPrices;
+        var state = libstorefront_1.IOCContainer.get(libstorefront_1.AbstractStore).getState();
+        var customerPrices = state.customerPrices;
         if (customerPrices.loaded) {
-            callback(customerPrices.items);
-            clearInterval(interval);
-            return;
+            var price_1 = customer_price_selectors_1.CustomerPriceSelectors.getCustomerPriceForProduct(product)(state);
+            if (price_1) {
+                product.customer_price = price_1;
+                if (product.configurable_children) {
+                    product.configurable_children = product.configurable_children.map(function (cc) { return (__assign(__assign({}, cc), { price: price_1.new_price })); });
+                }
+                clearInterval(interval);
+            }
         }
     }, 100);
 };

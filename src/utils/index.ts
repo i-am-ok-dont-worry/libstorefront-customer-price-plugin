@@ -1,13 +1,23 @@
-import { CustomerPrice } from   '../types';
 import { AbstractStore, IOCContainer } from '@grupakmk/libstorefront';
+import { CustomerPriceSelectors } from '../store/customer-price.selectors';
 
-export const observeCustomerPrice = (callback?: (customerPrice?: CustomerPrice) => void) => {
+export const observeCustomerPrice = (product: any) => {
     const interval = setInterval(() => {
-        const customerPrices = IOCContainer.get(AbstractStore).getState().customerPrices;
+        const state = IOCContainer.get(AbstractStore).getState();
+        const customerPrices = state.customerPrices;
         if (customerPrices.loaded) {
-            callback(customerPrices.items);
-            clearInterval(interval);
-            return;
+            const price = CustomerPriceSelectors.getCustomerPriceForProduct(product)(state);
+            if (price) {
+                product.customer_price = price;
+
+                if (product.configurable_children) {
+                    product.configurable_children = product.configurable_children.map(cc => ({
+                        ...cc,
+                        price: price.new_price
+                    }));
+                }
+                clearInterval(interval);
+            }
         }
     }, 100);
 }
