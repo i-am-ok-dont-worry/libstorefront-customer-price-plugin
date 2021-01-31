@@ -157,9 +157,9 @@ var CustomerPriceDao = /** @class */ (function () {
     function CustomerPriceDao(taskQueue) {
         this.taskQueue = taskQueue;
     }
-    CustomerPriceDao.prototype.getCustomerPrices = function (customerId, userToken) {
+    CustomerPriceDao.prototype.getCustomerPrices = function (customerId) {
         return this.taskQueue.execute({
-            url: libstorefront_1.URLTransform.getAbsoluteApiUrl('/api/vendor/customer-price/' + customerId + '?token=' + userToken),
+            url: libstorefront_1.URLTransform.getAbsoluteApiUrl('/api/vendor/customer-price/' + customerId + '?token={{token}}'),
             payload: {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
@@ -545,7 +545,7 @@ var CustomerPriceThunks;
                         libstorefront_1.Logger.info("Cannot fetch customer prices. User token is missing or invalid");
                         return [2 /*return*/, []];
                     }
-                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.CustomerPriceDao).getCustomerPrices(customerId, userToken)];
+                    return [4 /*yield*/, libstorefront_1.IOCContainer.get(dao_1.CustomerPriceDao).getCustomerPrices(customerId)];
                 case 2:
                     response = _a.sent();
                     if (!response) return [3 /*break*/, 5];

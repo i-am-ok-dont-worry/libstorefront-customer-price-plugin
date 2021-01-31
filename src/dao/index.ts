@@ -4,9 +4,9 @@ import { Task, TaskQueue, URLTransform } from '@grupakmk/libstorefront';
 @injectable()
 export class CustomerPriceDao {
 
-    public getCustomerPrices (customerId: string, userToken?: string): Promise<Task> {
+    public getCustomerPrices (customerId: string): Promise<Task> {
         return this.taskQueue.execute({
-            url: URLTransform.getAbsoluteApiUrl('/api/vendor/customer-price/' + customerId + '?token=' + userToken),
+            url: URLTransform.getAbsoluteApiUrl('/api/vendor/customer-price/' + customerId + '?token={{token}}'),
             payload: {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },

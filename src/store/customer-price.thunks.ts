@@ -11,7 +11,7 @@ export namespace CustomerPriceThunks {
             return [];
         }
 
-        const response = await IOCContainer.get(CustomerPriceDao).getCustomerPrices(customerId, userToken);
+        const response = await IOCContainer.get(CustomerPriceDao).getCustomerPrices(customerId);
         if (response) {
             const items = response.result;
             await dispatch(CustomerPriceActions.setCustomerPrices(items));
