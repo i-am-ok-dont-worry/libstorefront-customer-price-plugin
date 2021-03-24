@@ -1,6 +1,6 @@
 {
   "name": "@grupakmk/libstorefront-customer-price-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin for modifying products with customer price",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
